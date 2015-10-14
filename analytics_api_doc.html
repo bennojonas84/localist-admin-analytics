@@ -1,0 +1,369 @@
+<meta charset="utf-8"/>
+
+<h4 id="stats">Statistics</h4>
+
+<p>These resources provide summarized data.</p>
+
+<h5 id="stats-common-parameters">Common Parameters</h5>
+
+<p>The returned data can be restricted to a date range, using the <code>start</code> and <code>end</code> parameters. For event view statistics, this restricts to views in the specified range. For attendance statistics, restricts to attendances in the specified range. For all others, restricts to items created in the specified range.</p>
+
+<p>By default, the data returned will cover the last 30 days.</p>
+
+<table class="salescomp parameter-list">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>end</code></td>
+      <td>date</td>
+      <td>End of range (format: <em>YYYY-MM-DD</em>)</td>
+      <td>today</td>
+    </tr>
+    <tr>
+      <td><code>start</code></td>
+      <td>date</td>
+      <td>Start of range (format: <em>YYYY-MM-DD</em>)</td>
+      <td>30 days ago</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In addition, most event statistics can be restricted based on assigned event filters using the <code>type</code> parameter. Statistics do not support the other filter parameters (such as <code>match</code>, <code>keyword</code>, <code>exclude_type</code>, <code>featured</code> or <code>require_all</code>).</p>
+
+<p>To specify multiple values for <code>type</code>, the parameter should be repeated with brackets
+(<code>[]</code>) after the name.</p>
+
+<p>For instance, for events created with either filter ID <strong>1</strong> or <strong>2</strong>, use a URL such as:
+<code>http://CALENDAR-URL/api/2/events/stats/created?type[]=1&amp;type[]=2</code>.</p>
+
+<table class="salescomp parameter-list">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>type</code></td>
+      <td>number</td>
+      <td>Limit events to <a href="#event-filters">filter item</a> IDs</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="stats-approval-time">Approval Time</h5>
+
+<p class="resource"><strong>Resource:</strong> GET <code>/events/stats/approval</code></p>
+
+<p>Returns the average time between event submission and approval, in seconds.</p>
+
+<p>Supports limiting by creation date (using <code>start</code> and <code>end</code>) as well as assigned filters (<code>type</code>) as described in <a href="#common-parameters">common parameters</a>.</p>
+
+<p><strong>Note:</strong> Events first approved before September 24, 2015 are not included in this number.</p>
+
+<p class="request"><strong>Example Request:</strong> GET <code>http://CALENDAR-URL/api/2/events/stats/approval</code></p>
+
+<div class="code_box response"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>average_time</span><span style="color:#404">&quot;</span></span>: <span style="color:#00D">12955</span>,
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>first</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">null</span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>last</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">null</span>
+  }
+}
+</pre></div>
+</div>
+</div>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>average_time</code></td>
+      <td>Average number of seconds between event submission time and event approval time</td>
+    </tr>
+    <tr>
+      <td><code>date</code></td>
+      <td>Date range of event submission time. Can be <code>null</code> when using all events</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="stats-events-created">Events Created</h5>
+
+<p class="resource"><strong>Resource:</strong> GET <code>/events/stats/created</code></p>
+
+<p>Returns the number of events submitted by day for the given date range.</p>
+
+<p>Supports limiting by creation date (using <code>start</code> and <code>end</code>) as well as assigned filters (<code>type</code>) as described in <a href="#common-parameters">common parameters</a>.</p>
+
+<p class="request"><strong>Example Request:</strong> GET <code>http://CALENDAR-URL/api/2/events/stats/created</code></p>
+
+<div class="code_box response"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>created</span><span style="color:#404">&quot;</span></span>: [
+    {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>count</span><span style="color:#404">&quot;</span></span>: <span style="color:#00D">19</span>
+    }
+  ],
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>first</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31T00:00:00-04:00</span><span style="color:#710">&quot;</span></span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>last</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-09-30T23:59:59-04:00</span><span style="color:#710">&quot;</span></span>
+  }
+}
+</pre></div>
+</div>
+</div>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>created</code></td>
+      <td>Array of event submission <a href="#stats-format-count-by-date">counts by date</a></td>
+    </tr>
+    <tr>
+      <td><code>date</code></td>
+      <td>Date range of event submission time</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="stats-event-views">Event Views</h5>
+
+<p class="resource"><strong>Resource:</strong> GET <code>/events/EVENT_ID/stats/views</code></p>
+
+<p>Returns the number of event page views by day for the given date range.</p>
+
+<p><strong>Note:</strong> Only the page views for a specific event (specified as <code>EVENT_ID</code>) may be requested. Total page views across an entire calendar are not available.</p>
+
+<p class="request"><strong>Example Request:</strong> GET <code>http://CALENDAR-URL/api/2/events/123/stats/views</code></p>
+
+<div class="code_box response"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>views</span><span style="color:#404">&quot;</span></span>: [
+    {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>count</span><span style="color:#404">&quot;</span></span>: <span style="color:#00D">0</span>
+    }
+  ],
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>first</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31T00:00:00-04:00</span><span style="color:#710">&quot;</span></span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>last</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-09-30T23:59:59-04:00</span><span style="color:#710">&quot;</span></span>
+  }
+}
+</pre></div>
+</div>
+</div>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>created</code></td>
+      <td>Array of event view <a href="#stats-format-count-by-date">counts by date</a></td>
+    </tr>
+    <tr>
+      <td><code>date</code></td>
+      <td>Date range of event views</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="stats-users-created">Users Created</h5>
+
+<p class="resource"><strong>Resource:</strong> GET <code>/users/stats/views</code></p>
+
+<p>Returns the number of users created by day for the given date range.</p>
+
+<p>Supports limiting by creation date (using <code>start</code> and <code>end</code>) as described in <a href="#common-parameters">common parameters</a>.</p>
+
+<p class="request"><strong>Example Request:</strong> GET <code>http://CALENDAR-URL/api/2/users/stats/created</code></p>
+
+<div class="code_box response"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>created</span><span style="color:#404">&quot;</span></span>: [
+    {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>count</span><span style="color:#404">&quot;</span></span>: <span style="color:#00D">14</span>
+    }
+  ],
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>first</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-08-31T00:00:00-04:00</span><span style="color:#710">&quot;</span></span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>last</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2015-09-30T23:59:59-04:00</span><span style="color:#710">&quot;</span></span>
+  }
+}
+</pre></div>
+</div>
+</div>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>created</code></td>
+      <td>Array of user creation <a href="#stats-format-count-by-date">counts by date</a></td>
+    </tr>
+    <tr>
+      <td><code>date</code></td>
+      <td>Date range of user creation time</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="stats-attendee-geographic">Attendee Geographic Info</h5>
+
+<p class="resource"><strong>Resource:</strong> GET <code>/events/stats/attendees</code></p>
+<p class="resource"><strong>Resource:</strong> GET <code>/events/EVENT_ID/stats/attendees</code></p>
+
+<p>Returns geographic information for users attending events in the given date range.</p>
+
+<p>The locations of attendees are returned, as well as a count of the attendees in that area. By default, attendees are aggregated roughly by postal code, this can be expanded to larger areas (city, state, or country) with the <code>precision</code> parameter (either <code>city</code>, <code>state</code>, <code>country</code>).</p>
+
+<p>The first resource format (<code>/events/stats/attendees</code>) summarizes attendees over all events on a calendar. This form supports limiting by event instance date (using <code>start</code> and <code>end</code>) as well as assigned filters (<code>type</code>) as described in <a href="#common-parameters">common parameters</a>.</p>
+
+<p>The second resource format (<code>/events/EVENT_ID/stats/attendees</code>) summarizes all attendees of the specified event.</p>
+
+<p><strong>Note:</strong> Geographic information is not available for attendance entries created before September 24, 2015.</p>
+
+<table class="salescomp parameter-list">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>precision</code></td>
+      <td>string</td>
+      <td>Controls how precisely attendees are grouped into areas.
+  Can be <code>zip</code>, <code>city</code>, <code>state</code> or <code>country</code></td>
+      <td>zip</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="request"><strong>Example Request:</strong> GET <code>http://CALENDAR-URL/api/2/events/stats/attendees</code></p>
+
+<div class="code_box response"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>date</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>first</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">null</span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>last</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">null</span>
+  },
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>meta</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>event_id</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">null</span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>precision</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">postal_code</span><span style="color:#710">&quot;</span></span>
+  },
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>attendance_data</span><span style="color:#404">&quot;</span></span>: [
+    {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>count</span><span style="color:#404">&quot;</span></span>: <span style="color:#00D">6</span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>latitude</span><span style="color:#404">&quot;</span></span>: <span style="color:#60E">42.4485</span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>longitude</span><span style="color:#404">&quot;</span></span>: <span style="color:#60E">-76.4804</span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>country</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">US</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>city</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Ithaca</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>state</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">NY</span><span style="color:#710">&quot;</span></span>,
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>zip</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">14853</span><span style="color:#710">&quot;</span></span>
+    }
+  ]
+}
+</pre></div>
+</div>
+</div>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>attendance_data</code></td>
+      <td>Array of <a href="#stats-attendee-geographic-format-attendance">locations</a> with attendees</td>
+    </tr>
+    <tr>
+      <td><code>meta</code></td>
+      <td><code>event_id</code> is the ID of the event selected for results, or <code>null</code> if all events. <code>precision</code> is the precision value in use.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h6 id="stats-attendee-geographic-format-attendance">Format</h6>
+
+<p>Very similar to <a href="#geo-json">geo info</a> on events or places, but with lower precision. The <code>city</code>, <code>state</code> or <code>zip</code> fields will be omitted when <code>precision</code> is set to a larger value.</p>
+
+<table class="salescomp attribute-list">
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>city</code></td>
+      <td>Area’s city</td>
+    </tr>
+    <tr>
+      <td><code>count</code></td>
+      <td>Number of attendees from this area</td>
+    </tr>
+    <tr>
+      <td><code>country</code></td>
+      <td>Area’s country (2 characters)</td>
+    </tr>
+    <tr>
+      <td><code>latitude</code></td>
+      <td>Latitude of center of area</td>
+    </tr>
+    <tr>
+      <td><code>longitude</code></td>
+      <td>Longitude of center of area</td>
+    </tr>
+    <tr>
+      <td><code>state</code></td>
+      <td>Area’s state (or region)</td>
+    </tr>
+    <tr>
+      <td><code>zip</code></td>
+      <td>Area’s postal code</td>
+    </tr>
+  </tbody>
+</table>
