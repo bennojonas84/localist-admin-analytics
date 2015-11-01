@@ -1,0 +1,134 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <title>
+    Analytics - Page Views On Single Event
+  </title>
+  <link rel="shortcut icon" href="/localist_favicon.ico">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <link href="http://images-cf.localist.com/assets/localist_admin.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript">
+    //<![CDATA[
+    var LOCALIST_SETTINGS = {"theme_base":"base","icheck":true};
+    //]]>
+  </script>
+  <script src="http://images-cf.localist.com/assets/application.js" type="text/javascript"></script>
+  <script src="http://images-cf.localist.com/assets/admin.js" type="text/javascript"></script>
+  <script type="text/javascript" src="assets/libs/Chart.min.js"></script>
+  <script type="text/javascript" src="assets/libs/moment.min.js"></script>
+  <script type="text/javascript" src="assets/page_views_on_single_event.js"></script>
+
+
+
+</head>
+<body class="admin-analytics-page-views-on-single-event">
+
+  <!-- localist admin header and user menu -->
+  <div id="top">
+    <div class="wrapper">
+      <div class="grid_container">
+        <a href="http://www.localist.com/" class="home_link" id="home_link">
+            Localist
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content-wrapper">
+    <div class="wrapper">
+      <div class="grid_container">
+        <div class="alertmessage" style="display: none;" id="message-response">
+          <h3><span id="message-response-message"></span><a href="#" onclick="hideNotice(); return false;">&nbsp;</a></h3>
+        </div>
+
+        <!-- PAGE CONTENT AREA STARTS HERE -->
+
+        <div class="grid_8 alpha">
+          <div class="content content-inner-pages">
+            <div class="content-padding">
+              <div>
+                <canvas id="canvas" width="600" height="450"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- example table -->
+          <table border="0" class="item-list default footable">
+            <thead>
+              <tr>
+                <th>Event Date</th>
+                <th>Number of Views</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>October 31, 2015</td>
+                <td>1,234</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="grid_4 omega">
+          <div class="widget light_colorone">
+
+            <h2 class="widget-header">Dates</h2>
+            <div class="widget-content form-sidebar">
+              <fieldset>
+                <label>
+                  <span>Range</span>
+                  <select name="date_range" id="date_range_select" data-action="change-date-range">
+                    <option value="7">Last 7 Days</option>
+                    <option value="14">Last 14 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                    <option value="180">Last 180 Days</option>
+                    <option value="365">Last 365 Days</option>
+                    <option value="Custom">Custom</option>
+                  </select>
+                </label>
+              </fieldset>
+
+              <!-- custom date inputs -->
+              <div id="custom_date_range">
+                <fieldset>
+                  <label>
+                    <span>From</span>
+                    <input data-input="date" data-instance="start-date" data-preview="#x-start-date-preview" id="start_date_input" name="start_date_input" placeholder="&#x27;Tomorrow&#x27; or &#x27;Next Friday&#x27; or &#x27;4/10/2015&#x27;" type="text" value="" />
+                    <p class="preview" id="x-start-date-preview"></p>
+                  </label>
+                </fieldset>
+
+                <fieldset>
+                  <label>
+                    <span>To</span>
+                    <input data-input="date" data-instance="end-date" data-preview="#x-end-date-preview" id="end_date_input" name="end_date_input" placeholder="&#x27;Tomorrow&#x27; or &#x27;Next Friday&#x27; or &#x27;4/10/2015&#x27;" type="text" value="" />
+                    <p class="preview" id="x-end-date-preview"></p>
+                  </label>
+                </fieldset>
+              </div>
+
+              <input type="button" value="Update" class="btn-color" data-action="update-report">
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGE CONTENT AREA ENDS HERE -->
+
+      </div>
+    </div>
+  </div>
+
+
+  <div id="lclst_footer" class="footer">
+    <a rel="nofollow" href="http://www.localist.com?utm_source=cornell&utm_campaign=platform_footer&utm_medium=branded%20link">Powered by Localist.</a>
+  </div>
+</html>

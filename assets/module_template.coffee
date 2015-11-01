@@ -33,7 +33,7 @@ modulejs.define 'slzr/module', ['jquery', 'underscore'], ($, _) ->
 Slzr.jQuery ($) ->
   # Check if BODY has the defined class, and return unless it's the right page
   # for the code below.
-  return unless $(document.body).is('.admin-analytics-example')
+  return unless $(document.body).is('.admin-analytics')
 
   # You should only attach necessary event handlers in here, or bootstrap into
   # the module defined elsewhere.
