@@ -2,12 +2,12 @@
 
 window.calendar_url = 'http://events.cornell.edu'
 window.event_id = '499347'
-window.page_views_on_single_event_chart = null
 
 # define slzr/reports/page_views_on_single_event module
 modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscore'], ($, _) ->
 
   # initialize the data for drawing chart
+  pageViewsChart= null
   chartData =
     labels: []
     datasets: [ {
@@ -72,10 +72,10 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
 
   # method to draw chart with page views on single event
   drawChart: ->
-    if window.page_views_on_single_event_chart != null
-      window.page_views_on_single_event_chart.destroy()
+    if pageViewsChart != null
+      pageViewsChart.destroy()
     ctx = document.getElementById('canvas').getContext('2d')
-    window.page_views_on_single_event_chart = new Chart(ctx).Line(chartData, responsive: true)
+    pageViewsChart = new Chart(ctx).Line(chartData, responsive: true)
 
   # method to show report with page views on single event
   showDataOnReport: ->
