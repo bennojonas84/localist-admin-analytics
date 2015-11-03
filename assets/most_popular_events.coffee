@@ -61,7 +61,7 @@ Slzr.jQuery ($) ->
   MostPopularEventsModule.showDataOnReport()
 
   # action triggered when changing date range
-  $(document).onAction 'change-date-range', (event) ->
+  $('#date_range_select').change (event) ->
     if $(this).val() == 'Custom'
       $('#custom_date_range').show()
     else

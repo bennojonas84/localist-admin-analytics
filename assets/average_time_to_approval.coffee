@@ -51,8 +51,6 @@ Slzr.jQuery ($) ->
 
   return unless $(document.body).is('.admin-analytics-average-time-to-approval')
 
-  $('#custom_date_range').hide()
-
   AverageTimeModule = modulejs.require('slzr/reports/average_time_to_approval')
   AverageTimeModule.getAverageTimesToApproval()
   AverageTimeModule.showDataOnReport()
