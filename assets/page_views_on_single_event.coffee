@@ -107,19 +107,10 @@ Slzr.jQuery ($) ->
 
   return unless $(document.body).is('.admin-analytics-page-views-on-single-event')
 
-  $('#custom_date_range').hide()
-
   PageViewsModule = modulejs.require('slzr/reports/page_views_on_single_event')
   PageViewsModule.getPageViews()
   PageViewsModule.drawChart()
   PageViewsModule.showDataOnReport()
-
-  # action triggered when changing date range
-  $('#date_range_select').change (event) ->
-    if $(this).val() == 'Custom'
-      $('#custom_date_range').show()
-    else
-      $('#custom_date_range').hide()
 
   # action triggered when clicking 'update' button
   $(document).onAction 'update-report', (event) ->

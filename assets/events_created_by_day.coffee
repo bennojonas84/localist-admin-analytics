@@ -111,19 +111,10 @@ Slzr.jQuery ($) ->
 
   return unless $(document.body).is('.admin-analytics-events-created')
 
-  $('#custom_date_range').hide()
-
   EventsCreatedModule = modulejs.require('slzr/reports/events_created_by_day')
   EventsCreatedModule.getEventsCreated()
   EventsCreatedModule.drawChart()
   EventsCreatedModule.showDataOnReport()
-
-  # action triggered when changing date range
-  $('#date_range_select').change (event) ->
-    if $(this).val() == 'Custom'
-      $('#custom_date_range').show()
-    else
-      $('#custom_date_range').hide()
 
   # action triggered when clicking 'update' button
   $(document).onAction 'update-report', (event) ->

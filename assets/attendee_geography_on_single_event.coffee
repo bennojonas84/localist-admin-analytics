@@ -76,20 +76,11 @@ Slzr.jQuery ($) ->
 
   return unless $(document.body).is('.admin-analytics-attendee-geography')
 
-  $('#custom_date_range').hide()
-
   AttendeeGeographyModule = modulejs.require('slzr/reports/attendee_geography')
   AttendeeGeographyModule.initMap()
 
   AttendeeGeographyModule.getAttendeesOnSingleEvent()
   AttendeeGeographyModule.drawChart()
-
-  # action triggered when changing date range
-  $('#date_range_select').change (event) ->
-    if $(this).val() == 'Custom'
-      $('#custom_date_range').show()
-    else
-      $('#custom_date_range').hide()
 
   # action triggered when clicking 'update' button
   $(document).onAction 'update-report', (event) ->

@@ -55,18 +55,9 @@ Slzr.jQuery ($) ->
 
   return unless $(document.body).is('.admin-analytics-most-popular-events')
 
-  $('#custom_date_range').hide()
-
   MostPopularEventsModule = modulejs.require('slzr/reports/most_popular_events')
   MostPopularEventsModule.getMostPopularEvents()
   MostPopularEventsModule.showDataOnReport()
-
-  # action triggered when changing date range
-  $('#date_range_select').change (event) ->
-    if $(this).val() == 'Custom'
-      $('#custom_date_range').show()
-    else
-      $('#custom_date_range').hide()
 
   # action triggered when clicking 'update' button
   $(document).onAction 'update-report', (event) ->
