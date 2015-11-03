@@ -21,14 +21,14 @@ modulejs.define 'slzr/reports/users_created_by_day', ['jquery', 'underscore'], (
     } ]
 
   # initialize users created by day
-  eventsCreatedByDay = null
+  usersCreatedByDay = null
 
   # define method to get users created by day
   getEventsCreated: ->
     dateRange = $('#date_range_select').val()
     endDate = new Date
     startDate = new Date
-    showChartWeekly = false
+    chartKind = 'daily'
 
     # set start date and end date for reporting
     if dateRange != 'Custom'
@@ -44,8 +44,10 @@ modulejs.define 'slzr/reports/users_created_by_day', ['jquery', 'underscore'], (
       return false
 
     # check if showing chart daily or weekly
-    if daysDiff > 14
-      showChartWeekly = true
+    if daysDiff >= 179
+      chartKind = 'monthly'
+    else if daysDiff > 14
+      chartKind = 'weekly'
 
     $.ajax
       url: window.calendar_url + '/api/2/users/stats/created'
@@ -55,22 +57,29 @@ modulejs.define 'slzr/reports/users_created_by_day', ['jquery', 'underscore'], (
       async: false
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        eventsCreatedByDay = data
+        usersCreatedByDay = data
 
     chartData.datasets[0].data = []
     chartData.labels = []
 
-    if eventsCreatedByDay != null
+    if usersCreatedByDay != null
       weekStartDate = ""
       weekCount = 0
-      $(eventsCreatedByDay.created).each (index, element) ->
-        if showChartWeekly == false
+      $(usersCreatedByDay.created).each (index, element) ->
+        if chartKind == 'daily'
           chartData.datasets[0].data.push element.count
           chartData.labels.push moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
-        else
+        else if chartKind == 'weekly'
           if index % 7 == 0
             weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
-          if index % 7 == 6 || index == eventsCreatedByDay.created.length - 1
+          if index % 7 == 6 || index == usersCreatedByDay.created.length - 1
+            chartData.datasets[0].data.push weekCount += element.count
+            chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+          weekCount += element.count
+        else
+          if index % 30 == 0
+            weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+          if index % 30 == 29 || index == usersCreatedByDay.created.length - 1
             chartData.datasets[0].data.push weekCount += element.count
             chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           weekCount += element.count
@@ -86,7 +95,7 @@ modulejs.define 'slzr/reports/users_created_by_day', ['jquery', 'underscore'], (
   # method to show report
   showDataOnReport: ->
     reportBody = ''
-    $(eventsCreatedByDay.created).each (index, element) ->
+    $(usersCreatedByDay.created).each (index, element) ->
       reportBody += '<tr>'
       reportBody += '<td>' + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY") + '</td>'
       reportBody += '<td>' + element.count + '</td>'

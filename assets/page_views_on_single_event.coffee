@@ -29,7 +29,7 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
     dateRange = $('#date_range_select').val()
     endDate = new Date
     startDate = new Date
-    showChartWeekly = false
+    chartKind = 'daily'
 
     # set start date and end date for reporting
     if dateRange != 'Custom'
@@ -45,8 +45,10 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
       return false
 
     # check if showing chart daily or weekly
-    if daysDiff > 14
-      showChartWeekly = true
+    if daysDiff >= 179
+      chartKind = 'monthly'
+    else if daysDiff > 14
+      chartKind = 'weekly'
 
     $.ajax
       url: window.calendar_url + '/api/2/events/' + window.event_id + '/stats/views'
@@ -65,13 +67,20 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
       weekStartDate = ""
       weekCount = 0
       $(pageViewsOnEventData.views).each (index, element) ->
-        if showChartWeekly == false
+        if chartKind == 'daily'
           chartData.datasets[0].data.push element.count
           chartData.labels.push moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
-        else
+        else if chartKind == 'weekly'
           if index % 7 == 0
             weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           if index % 7 == 6 || index == pageViewsOnEventData.views.length - 1
+            chartData.datasets[0].data.push weekCount += element.count
+            chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+          weekCount += element.count
+        else
+          if index % 30 == 0
+            weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+          if index % 30 == 29 || index == pageViewsOnEventData.views.length - 1
             chartData.datasets[0].data.push weekCount += element.count
             chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           weekCount += element.count
