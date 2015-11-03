@@ -36,6 +36,7 @@ modulejs.define 'slzr/reports/most_popular_events', ['jquery', 'underscore'], ($
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         mostPopularEvents = data
+        console.log(data)
     return true
 
   # method to show report
@@ -45,7 +46,7 @@ modulejs.define 'slzr/reports/most_popular_events', ['jquery', 'underscore'], ($
       reportBody += '<tr>'
       reportBody += '<td>' + moment(element.event.created_at, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY") + '</td>'
       reportBody += '<td>' + element.event.title + '</td>'
-      reportBody += '<td>' + moment(element.event.first_date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY") + '</td>'
+      reportBody += '<td>' + moment(element.event.event_instances[0].event_instance.start, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY") + '</td>'
       reportBody += '</tr>'
 
     $('.item-list tbody').html reportBody
