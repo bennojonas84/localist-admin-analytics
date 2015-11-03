@@ -37,8 +37,13 @@ modulejs.define 'slzr/reports/events_created_by_day', ['jquery', 'underscore'], 
       startDate = $("#start_date_input").data("date")
       endDate = $("#end_date_input").data("date")
 
+    daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    if daysDiff > 366
+      $('#message-response-message').html('The date range must be 366 days or less.')
+      $('#message-response').show()
+      return false
     # check if showing chart daily or weekly
-    if (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) > 14
+    if daysDiff > 14
       showChartWeekly = true
 
     # build the type params like &type[]=1&type[]=2
@@ -73,7 +78,7 @@ modulejs.define 'slzr/reports/events_created_by_day', ['jquery', 'underscore'], 
             chartData.datasets[0].data.push weekCount += element.count
             chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           weekCount += element.count
-
+    return true
   # method to draw chart
   drawChart: ->
     if eventsCreatedChart != null
@@ -115,6 +120,6 @@ Slzr.jQuery ($) ->
     if $("#date_range_select").val() == "Custom" && ($("#start_date_input").data("date-status") != "ok" && $("#end_date_input").data("date-status") != "ok")
       # show notice
     else
-      EventsCreatedModule.getEventsCreated()
-      EventsCreatedModule.drawChart()
-      EventsCreatedModule.showDataOnReport()
+      if EventsCreatedModule.getEventsCreated()
+        EventsCreatedModule.drawChart()
+        EventsCreatedModule.showDataOnReport()

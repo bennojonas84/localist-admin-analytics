@@ -21,6 +21,12 @@ modulejs.define 'slzr/reports/most_popular_events', ['jquery', 'underscore'], ($
       startDate = $("#start_date_input").data("date")
       endDate = $("#end_date_input").data("date")
 
+    daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    if daysDiff > 366
+      $('#message-response-message').html('The date range must be 366 days or less.')
+      $('#message-response').show()
+      return false
+
     $.ajax
       url: window.calendar_url + '/api/2/events'
       type: 'GET'
@@ -30,6 +36,7 @@ modulejs.define 'slzr/reports/most_popular_events', ['jquery', 'underscore'], ($
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         mostPopularEvents = data
+    return true
 
   # method to show report
   showDataOnReport: ->
@@ -65,5 +72,5 @@ Slzr.jQuery ($) ->
     if $("#date_range_select").val() == "Custom" && ($("#start_date_input").data("date-status") != "ok" && $("#end_date_input").data("date-status") != "ok")
       # show notice
     else
-      MostPopularEventsModule.getMostPopularEvents()
-      MostPopularEventsModule.showDataOnReport()
+      if MostPopularEventsModule.getMostPopularEvents()
+        MostPopularEventsModule.showDataOnReport()

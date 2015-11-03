@@ -38,8 +38,14 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
       startDate = $("#start_date_input").data("date")
       endDate = $("#end_date_input").data("date")
 
+    daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    if daysDiff > 366
+      $('#message-response-message').html('The date range must be 366 days or less.')
+      $('#message-response').show()
+      return false
+
     # check if showing chart daily or weekly
-    if (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) > 14
+    if daysDiff > 14
       showChartWeekly = true
 
     $.ajax
@@ -69,7 +75,7 @@ modulejs.define 'slzr/reports/page_views_on_single_event', ['jquery', 'underscor
             chartData.datasets[0].data.push weekCount += element.count
             chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           weekCount += element.count
-
+    return true
   # method to draw chart with page views on single event
   drawChart: ->
     if pageViewsChart != null
@@ -111,6 +117,6 @@ Slzr.jQuery ($) ->
     if $("#date_range_select").val() == "Custom" && ($("#start_date_input").data("date-status") != "ok" && $("#end_date_input").data("date-status") != "ok")
       # show notice
     else
-      PageViewsModule.getPageViews()
-      PageViewsModule.drawChart()
-      PageViewsModule.showDataOnReport()
+      if PageViewsModule.getPageViews()
+        PageViewsModule.drawChart()
+        PageViewsModule.showDataOnReport()

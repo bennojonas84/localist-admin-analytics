@@ -11,7 +11,7 @@ modulejs.define 'slzr/reports/attendee_geography', ['jquery', 'underscore'], ($,
   attendeesOnAllEvents = null
 
   # define method to get attendee geography on all events
-  getAttendeesOnSingleEvent: ->
+  getAttendeesOnAllEvents: ->
     dateRange = $('#date_range_select').val()
     endDate = new Date
     startDate = new Date
@@ -23,6 +23,12 @@ modulejs.define 'slzr/reports/attendee_geography', ['jquery', 'underscore'], ($,
       startDate = $("#start_date_input").data("date")
       endDate = $("#end_date_input").data("date")
 
+    daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    if daysDiff > 366
+      $('#message-response-message').html('The date range must be 366 days or less.')
+      $('#message-response').show()
+      return false
+
     $.ajax
       url: window.calendar_url + '/api/2/users/stats/attendees'
       type: 'GET'
@@ -32,6 +38,7 @@ modulejs.define 'slzr/reports/attendee_geography', ['jquery', 'underscore'], ($,
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         attendeesOnAllEvents = data
+    return true
 
   initMap: ->
     window.gmap = new google.maps.Map(document.getElementById('map'), {
@@ -74,7 +81,7 @@ Slzr.jQuery ($) ->
   AttendeeGeographyModule = modulejs.require('slzr/reports/attendee_geography')
   AttendeeGeographyModule.initMap()
 
-  AttendeeGeographyModule.getAttendeesOnSingleEvent()
+  AttendeeGeographyModule.getAttendeesOnAllEvents()
   AttendeeGeographyModule.drawChart()
 
   # action triggered when changing date range
@@ -89,5 +96,5 @@ Slzr.jQuery ($) ->
     if $("#date_range_select").val() == "Custom" && ($("#start_date_input").data("date-status") != "ok" && $("#end_date_input").data("date-status") != "ok")
       # show notice
     else
-      AttendeeGeographyModule.getAttendeesOnSingleEvent()
-      AttendeeGeographyModule.drawChart()
+      if AttendeeGeographyModule.getAttendeesOnAllEvents()
+        AttendeeGeographyModule.drawChart()
