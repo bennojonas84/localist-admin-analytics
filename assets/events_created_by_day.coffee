@@ -20,6 +20,19 @@ modulejs.define 'slzr/reports/events_created_by_day', ['jquery', 'underscore'], 
       data: []
     } ]
 
+  chartDataForTotal =
+    labels: []
+    datasets: [ {
+      label: 'Events Created By Day'
+      fillColor: 'rgba(151,187,205,0.2)'
+      strokeColor: 'rgba(151,187,205,1)'
+      pointColor: 'rgba(151,187,205,1)'
+      pointStrokeColor: '#fff'
+      pointHighlightFill: '#fff'
+      pointHighlightStroke: 'rgba(151,187,205,1)'
+      data: []
+    } ]
+
   # initialize events created by day
   eventsCreatedByDay = null
 
@@ -66,35 +79,62 @@ modulejs.define 'slzr/reports/events_created_by_day', ['jquery', 'underscore'], 
 
     chartData.datasets[0].data = []
     chartData.labels = []
+    chartDataForTotal.datasets[0].data = []
+    chartDataForTotal.labels = []
 
     if eventsCreatedByDay != null
-      weekStartDate = ""
-      weekCount = 0
+      durationStartDate = ""
+      totalCountByDuration = 0
+      totalCount = 0
       $(eventsCreatedByDay.created).each (index, element) ->
+        totalCount += element.count
         if chartKind == 'daily'
+          # set events created chart data
           chartData.datasets[0].data.push element.count
           chartData.labels.push moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+
+          # set events total count chart data
+          chartDataForTotal.datasets[0].data.push totalCount
+          chartDataForTotal.labels.push moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
         else if chartKind == 'weekly'
           if index % 7 == 0
-            weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+            durationStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           if index % 7 == 6 || index == eventsCreatedByDay.created.length - 1
-            chartData.datasets[0].data.push weekCount += element.count
-            chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
-          weekCount += element.count
+            # set events created chart data
+            chartData.datasets[0].data.push totalCountByDuration += element.count
+            totalCountByDuration = 0
+            chartData.labels.push durationStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+
+            # set events total count chart data
+            chartDataForTotal.datasets[0].data.push totalCount
+            chartDataForTotal.labels.push durationStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+
+          totalCountByDuration += element.count
         else
           if index % 30 == 0
-            weekStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+            durationStartDate = moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
           if index % 30 == 29 || index == eventsCreatedByDay.created.length - 1
-            chartData.datasets[0].data.push weekCount += element.count
-            chartData.labels.push weekStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
-          weekCount += element.count
+            # set events created chart data
+            chartData.datasets[0].data.push totalCountByDuration += element.count
+            totalCountByDuration = 0
+            chartData.labels.push durationStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+
+            # set events total count chart data
+            chartDataForTotal.datasets[0].data.push totalCount
+            chartDataForTotal.labels.push durationStartDate += " ~ " + moment(element.date, "YYYY-MM-DD[T]hh:mm:ss").format("MMM DD, YYYY")
+
+          totalCountByDuration += element.count
     return true
   # method to draw chart
   drawChart: ->
     if eventsCreatedChart != null
       eventsCreatedChart.destroy()
     ctx = document.getElementById('canvas').getContext('2d')
-    eventsCreatedChart = new Chart(ctx).Line(chartData, responsive: true)
+
+    if $('#show-events-created').is(':checked')
+      eventsCreatedChart = new Chart(ctx).Line(chartData, responsive: true)
+    else
+      eventsCreatedChart = new Chart(ctx).Line(chartDataForTotal, responsive: true)
 
   # method to show report
   showDataOnReport: ->
