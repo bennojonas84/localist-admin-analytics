@@ -46,7 +46,17 @@ modulejs.define 'slzr/reports/attendee_geography', ['jquery', 'underscore'], ($,
       center: {lat: 38.0, lng: -97.0}
     });
 
-  # method to draw chart
+  reCenter: ->
+    $.ajax
+      url: 'http://maps.googleapis.com/maps/api/geocode/json'
+      type: 'GET'
+      data: 'components=postal_code:' + $('#zipcode').val() + '&sensor=true'
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        if data.status == 'OK'
+          window.gmap.panTo({lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng})
+
+# method to draw chart
   drawChart: ->
     if window.markers != null
       $(window.markers).each (index, marker) ->
@@ -57,8 +67,6 @@ modulejs.define 'slzr/reports/attendee_geography', ['jquery', 'underscore'], ($,
 
     window.markers = []
     $(attendeesOnSingleEvent.attendance_data).each (index, element) ->
-      if element.zip == $("#zipcode").val()
-        window.gmap.panTo({lat: element.latitude, lng: element.longitude})
       window.markers.push new MarkerWithLabel({
         position:
           lat: element.latitude
@@ -81,6 +89,10 @@ Slzr.jQuery ($) ->
 
   AttendeeGeographyModule.getAttendeesOnSingleEvent()
   AttendeeGeographyModule.drawChart()
+
+  $('#zipcode').keydown (event) ->
+    if event.which == 13
+      AttendeeGeographyModule.reCenter()
 
   # action triggered when clicking 'update' button
   $(document).onAction 'update-report', (event) ->
